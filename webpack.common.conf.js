@@ -27,26 +27,26 @@ const generateConfig = env => {
 
   // 样式处理
   const cssLoaders = [{
-    loader: 'css-loader',
-    options: {
-      importLoaders: 2,
-      sourceMap: env === 'development'
-    }
-  },
-  {
-    loader: 'postcss-loader',
-    options: {
-      ident: 'postcss',
-      sourceMap: env === 'development',
-      plugins: [require('postcss-cssnext')()].concat(
-        env === 'production'
-          ? require('postcss-sprites')({
+      loader: 'css-loader',
+      options: {
+        importLoaders: 2,
+        sourceMap: env === 'development'
+      }
+    },
+    {
+      loader: 'postcss-loader',
+      options: {
+        ident: 'postcss',
+        sourceMap: env === 'development',
+        plugins: [require('postcss-cssnext')()].concat(
+          env === 'production' ?
+          require('postcss-sprites')({
             spritePath: 'dist/assets/imgs/sprites', // 精灵图输出位置
             retina: true // 处理两倍图片的大小
           }) : []
-      )
+        )
+      }
     }
-  }
   ]
   const styleLoader =
     env === 'production' ? [MiniCssExtractPlugin.loader].concat(cssLoaders) : [{
@@ -85,7 +85,7 @@ const generateConfig = env => {
     output: {
       path: resolve(__dirname, './../dist'),
       publicPath: '/',
-      filename: 'js/[name]-bundle-[hash:5].js'
+      filename: 'js/[name]-bundle-[chunkhash:5].js'
     },
     // 加载本地第三方js库
     // resolve: {
@@ -95,44 +95,44 @@ const generateConfig = env => {
     // },
     module: {
       rules: [{
-        test: /\.js$/,
-        exclude: [resolve(__dirname, './../src/libs')],
-        include: [resolve(__dirname, './../src')],
-        use: scriptLoader
-      },
-      {
-        test: /\.less$/,
-        use: styleLoader.concat({
-          loader: 'less-loader',
-          options: {
-            sourceMap: env === 'development'
-          }
-        })
-      },
-      {
-        test: /\.css$/,
-        use: styleLoader
-      },
-      {
-        test: /\.(jpg|jpeg|png|gif)$/,
-        use: fileLoader.concat(
-          env === 'production' ? {
-            loader: 'img-loader', // 压缩图片
+          test: /\.js$/,
+          exclude: [resolve(__dirname, './../src/libs')],
+          include: [resolve(__dirname, './../src')],
+          use: scriptLoader
+        },
+        {
+          test: /\.less$/,
+          use: styleLoader.concat({
+            loader: 'less-loader',
             options: {
-              pngquant: { // png图片适用
-                quality: 80
-              }
+              sourceMap: env === 'development'
             }
-          } : []
-        )
-      },
-      {
-        test: /\.(eot|woff2?|ttf|svg|otf)$/,
-        use: fileLoader
-      }, {
-        test: /\.html$/,
-        use: htmlLoader
-      }
+          })
+        },
+        {
+          test: /\.css$/,
+          use: styleLoader
+        },
+        {
+          test: /\.(jpg|jpeg|png|gif)$/,
+          use: fileLoader.concat(
+            env === 'production' ? {
+              loader: 'img-loader', // 压缩图片
+              options: {
+                pngquant: { // png图片适用
+                  quality: 80
+                }
+              }
+            } : []
+          )
+        },
+        {
+          test: /\.(eot|woff2?|ttf|svg|otf)$/,
+          use: fileLoader
+        }, {
+          test: /\.html$/,
+          use: htmlLoader
+        }
       ]
     },
     plugins: [

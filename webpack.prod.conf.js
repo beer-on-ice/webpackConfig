@@ -38,17 +38,35 @@ module.exports = {
       maxInitialRequests: 3,
       name: false,
       cacheGroups: {
-        vendors: {
+        commons: {
+          name: 'commons',
+          chunks: 'initial',
+          minChunks: 2,
+          minSize: 0
+        },
+        vendor: {
           name: 'vendor',
-          test: /node_modules\/(.*)\.js/,
+          test: /[\\/]node_modules[\\/]/,
           chunks: 'initial',
           reuseExistingChunk: false,
-          priority: -10
+          priority: 100
         }
       }
     }
   },
   plugins: [
+    /**
+     *
+     *  webpack3可用，用来优化打包速度
+     * new webpack.DllReferencePlugin({
+         manifest: require('../src/dll/ui-manifest.json')
+       }),
+       new webpack.DllReferencePlugin({
+         manifest: require('../src/dll/vue-manifest.json')
+       })
+     *
+     */
+
     // new HtmlWebpackInlineChunkPlugin({
     //   inlineChunks: ['manifest']
     // }),
