@@ -151,7 +151,10 @@ const generateConfig = env => {
       new webpack.ProvidePlugin({
         $: 'jquery',
         _: 'lodash'
-      })
+      }),
+      // 长缓存优化
+      new webpack.NamedChunksPlugin(),
+      new webpack.NamedModulesPlugin()
     ]
     // performance: {
     //   hints: 'warning', // 枚举
